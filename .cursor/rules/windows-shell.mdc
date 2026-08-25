@@ -1,0 +1,22 @@
+---
+description: Native win32 has no agent filesystem sandbox — request unsandboxed Shell approval and continue.
+alwaysApply: true
+---
+
+# Windows agent shell (this machine)
+
+Cursor on native Windows cannot enforce `workspace_readwrite`. The helper is a network proxy only. A default Shell is refused with “sandbox policy unsupported” and **never starts**.
+
+This repo is Windows-native (WPF, kpacket2/MSVC/Ashita). Do not switch the agent to Remote-WSL to get Landlock.
+
+## Do
+
+- Treat a sandbox-policy failure as “needs unsandboxed approval,” not as a hard stop.
+- Re-run the same Shell with `required_permissions: ["all"]` and wait for the user to approve.
+- Keep using in-workspace Write/StrReplace and GitHub MCP without Shell.
+
+## Do not
+
+- Retry the sandboxed Shell in a loop.
+- Enable Run Everything or Legacy Terminal to fake a sandbox.
+- Abort the task because the sandbox backend is missing.

@@ -1,0 +1,25 @@
+[submodule "kparser2"]
+	path = kparser2
+	url = https://github.com/poroburu/kparser2.git
+[submodule "kpacket2"]
+	path = kpacket2
+	url = https://github.com/poroburu/kpacket2.git
+[submodule "kparser"]
+	path = kparser
+	url = https://github.com/poroburu/kparser.git
+[submodule "kpacket"]
+	path = kpacket
+	url = https://github.com/poroburu/kpacket.git
+[submodule "XiPackets"]
+	path = XiPackets
+	url = https://github.com/atom0s/XiPackets.git
+[submodule "VieweD"]
+	path = VieweD
+	url = https://github.com/ZeromusXYZ/VieweD.git
+[submodule "server"]
+	path = server
+	url = https://github.com/LandSandBoat/server.git
+[submodule "ffxi-captures"]
+	path = ffxi-captures
+	url = https://github.com/poroburu/ffxi-captures.git
+	update = none

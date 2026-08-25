@@ -1,0 +1,20 @@
+---
+description: GitHub Issues own decisions; git owns facts. Do not spray verdicts across parent and children.
+alwaysApply: true
+---
+
+# Issues vs git
+
+- GitHub Issues on the owning child = open work and decisions. Close when decided, not when a PR exists.
+- Git = facts that would otherwise lie. One canonical file; pointers elsewhere.
+- PRs preferred for decoder, wire-contract, and plugin runtime changes. Not required. Direct push to `main` is allowed on first-party children.
+
+## Do not
+
+- Restate an issue verdict in parent README and child docs in the same change.
+- Treat the parent as a build root.
+
+## Do
+
+- Edit the child that owns the fact, then bump the parent pin.
+- Point to [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/pin-bump.md](docs/pin-bump.md).

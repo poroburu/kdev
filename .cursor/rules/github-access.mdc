@@ -1,0 +1,22 @@
+---
+description: GitHub MCP vs gh sandbox — use full_network, never re-auth in the agent
+alwaysApply: true
+---
+
+# GitHub access (this machine)
+
+`gh` is already logged in as poroburu on the host. The **default agent sandbox** cannot enforce filesystem isolation on Windows, so shell commands that write need `required_permissions: ["all"]`. Authenticated `gh` in the default sandbox can falsely say the token is invalid.
+
+## Do
+
+- GitHub API (issues, PRs, search, reviews): **GitHub MCP**, not `gh`.
+- `git fetch` / `push` / `gh` in the shell: set `required_permissions: ["all"]` (Windows GCM).
+- Push branches with local git; open the PR with MCP `create_pull_request`.
+
+## Do not
+
+- Run `gh auth login`, `gh auth refresh`, or `gh auth logout` from the agent.
+- Treat sandbox “token invalid” / Forbidden as a credential problem.
+- Put `GITHUB_TOKEN` or a PAT in env / `mcp.json`.
+
+MCP token should keep **Contents: read** and **Pull requests: write**. That can open a PR; it cannot push commits.
