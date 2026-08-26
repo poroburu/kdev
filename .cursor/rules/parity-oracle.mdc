@@ -21,4 +21,4 @@ When a live pattern does not reconcile with kparser2 (unknown kind, garbage `com
 
 On mismatch (including after a DC recon), look up the sibling repo for that opcode before patching: XiPackets `0x0017` / `0x0028`, VieweD on the capture, LandSandBoat `server/scripts/enum/msg.lua` for `0x28` `message`, `spell_list.sql` for spell ids. Do not give the user an in-game checklist.
 
-Dual-dump of constructed fixtures proves CLI agreement, not retail layout. Live wins over `generate-fixtures.ps1`.
+Dual-dump of constructed fixtures proves CLI agreement, not retail layout. Live wins over `generate-fixtures.ps1`. `--assert-settled` is packet-id classification, not “kparser fights/offense match this camp.” kparser.cli cannot attach; do not treat Motenten chatline fixtures as the live session.
