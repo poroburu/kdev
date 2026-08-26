@@ -7,7 +7,11 @@ alwaysApply: true
 
 Long-running observe is the default. Do not write the user a cast/chat script. Echo via `kparser2.cli echo` only when one sample is blocking.
 
-A game DC or kpacket unload **ends that capture**. Do not append. Reconcile with `kparser2/scripts/reconcile-capture.ps1` (drop truncated last lines). Trailing `0x28` magic start without finish is incomplete, not a miss. Then `wait-kpacket-session.ps1` and `record` a **new** file (`--idle-ms 180000`). Stop if the user ends the run.
+The scan’s long-running process is `kparser2.cli record` (optional `--checkpoint-ms 120000`). Attach `notify_on_output` to `record checkpoint:` and `recording stopped:`. Do **not** arm a `Start-Sleep` + `AGENT_LOOP_WAKE` shell with an injected prompt — Cursor auto-review blocks that as a second unattended agent job. `/loop` in this repo means record/watch stdout, not a sleeper.
+
+On `record checkpoint:`, run `kparser2/scripts/opcode-heat.ps1` first. Exit 0 (`HEAT unchanged`) means skip reconcile and `--assert-settled`. Town position/entity spam and extra yells of an already-seen Kind are not a parity change. Do not infer chocobo digging from a town zone name; the server list is `diggingZoneList` in `server/scripts/globals/hobbies/chocobo_digging/logic.lua`.
+
+A game DC, kpacket unload, or incoming `0x000B` with `LogoutState` LOGOUT/TIMEOUT/GMLOGOUT **ends that capture**. Zone change is the same opcode (`LogoutState=2`) — keep recording; do not treat every `0x000B` as logout. Do not append after a real stop. Reconcile with `kparser2/scripts/reconcile-capture.ps1` (drop truncated last lines). Trailing `0x28` magic start without finish is incomplete, not a miss. Then `wait-kpacket-session.ps1` and `record` a **new** file (`--idle-ms 180000`). Stop if the user ends the run.
 
 When a live pattern does not reconcile with kparser2 (unknown kind, garbage `commandArg`, start packet counted as damage, speaker/mode/body mismatch):
 
