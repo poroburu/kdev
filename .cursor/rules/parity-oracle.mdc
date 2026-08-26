@@ -1,0 +1,20 @@
+---
+description: Long-running kparser2 parity — kparser is a read-only oracle; live bytes win; implement mismatches only in kparser2.
+alwaysApply: true
+---
+
+# Parity loop (kparser is oracle-only)
+
+Long-running observe is the default. Do not write the user a cast/chat script. Echo via `kparser2.cli echo` only when one sample is blocking.
+
+A game DC or kpacket unload **ends that capture**. Do not append. Reconcile with `kparser2/scripts/reconcile-capture.ps1` (drop truncated last lines). Trailing `0x28` magic start without finish is incomplete, not a miss. Then `wait-kpacket-session.ps1` and `record` a **new** file (`--idle-ms 180000`). Stop if the user ends the run.
+
+When a live pattern does not reconcile with kparser2 (unknown kind, garbage `commandArg`, start packet counted as damage, speaker/mode/body mismatch):
+
+1. Ground truth is **HorizonXI bytes** (`record` NDJSON, VieweD, XiPackets).
+2. **kparser.cli snapshot** is a read-only second opinion. It can be wrong (chatlog codes ≠ `0x28 cmd_no`, missing prepare, no auto-translate). Never edit kparser to make a dump match. Never “fix” kparser so kparser2 looks better.
+3. Implement the **one** event in kparser2 (decoder, `ChatCommon`, `BattleMessageCatalog`, ingest). Promote a short live slice only after inspection. Open the PR against **`develop`**, not `main` (`main` is the release). Session branches use Conventional Branch names (`cursor/session-yyyymmdd-hhmm`, `feat/…`, `fix/…`); do not use a `parity/` prefix.
+
+On mismatch (including after a DC recon), look up the sibling repo for that opcode before patching: XiPackets `0x0017` / `0x0028`, VieweD on the capture, LandSandBoat `server/scripts/enum/msg.lua` for `0x28` `message`, `spell_list.sql` for spell ids. Do not give the user an in-game checklist.
+
+Dual-dump of constructed fixtures proves CLI agreement, not retail layout. Live wins over `generate-fixtures.ps1`.
