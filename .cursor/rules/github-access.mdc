@@ -1,5 +1,5 @@
 ---
-description: GitHub MCP vs gh sandbox — use full_network, never re-auth in the agent
+description: GitHub access under the Windows sandbox — use adaptive gh/MCP fallback, never re-authenticate in the agent
 alwaysApply: true
 ---
 
@@ -9,9 +9,10 @@ alwaysApply: true
 
 ## Do
 
-- GitHub API (issues, PRs, search, reviews): **GitHub MCP**, not `gh`.
-- `git fetch` / `push` / `gh` in the shell: set `required_permissions: ["all"]` (Windows GCM).
-- Push branches with local git; open the PR with MCP `create_pull_request`.
+- Follow the shared GitHub operations policy. Prefer `gh` for GitHub operations that work with the current sandbox permissions.
+- For issues, pull requests, search, and reviews, use GitHub MCP when `gh` is unavailable or would need `required_permissions: ["all"]` solely to reach Windows Credential Manager. State that reason before the fallback.
+- For `git fetch`, `git push`, or a `gh` operation with no GitHub MCP alternative, request `required_permissions: ["all"]` for Windows Credential Manager. Do not request it merely to avoid using an available MCP operation.
+- Push branches with local git; open the pull request with `gh pr create` when it works, otherwise use GitHub MCP after explaining the fallback.
 
 ## Do not
 
@@ -19,4 +20,4 @@ alwaysApply: true
 - Treat sandbox “token invalid” / Forbidden as a credential problem.
 - Put `GITHUB_TOKEN` or a PAT in env / `mcp.json`.
 
-MCP token should keep **Contents: read** and **Pull requests: write**. That can open a PR; it cannot push commits.
+The MCP token should keep **Contents: read** and **Pull requests: write**. It can open a pull request but cannot push commits; do not broaden it without explicit user approval.
