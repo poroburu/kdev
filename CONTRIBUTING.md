@@ -7,3 +7,5 @@ Write-path for parser work is [`kparser2`](kparser2/). Write-path for live captu
 - **PRs** preferred for decoder, wire-contract, and plugin runtime changes. Direct push to `main` is allowed on first-party children when you own them.
 
 After changing a submodule, bump the parent pin ([docs/pin-bump.md](docs/pin-bump.md)).
+
+Report-oracle loop (local dual capture, not an RC gate): [kparser2/docs/report-oracle.md](kparser2/docs/report-oracle.md).

@@ -1,24 +1,37 @@
 ---
-description: Long-running kparser2 parity — kparser is a read-only oracle; live bytes win; implement mismatches only in kparser2.
+description: Long-running kparser2 parity — two oracles; dual capture is a gate for report meaning; live bytes win on the wire.
 alwaysApply: true
 ---
 
-# Parity loop (kparser is oracle-only)
+# Parity loop (two oracles)
 
-Long-running observe is the default. Do not write the user a cast/chat script. Echo via `kparser2.cli echo` only when one sample is blocking.
+Canonical runbook: [kparser2/docs/report-oracle.md](kparser2/docs/report-oracle.md). Do not write the user a cast/chat script. Echo via `kparser2.cli echo` only when one sample is blocking.
 
-The scan’s long-running process is `kparser2.cli record` (optional `--checkpoint-ms 120000`). Attach `notify_on_output` to `record checkpoint:` and `recording stopped:`. Do **not** arm a `Start-Sleep` + `AGENT_LOOP_WAKE` shell with an injected prompt — Cursor auto-review blocks that as a second unattended agent job. `/loop` in this repo means record/watch stdout, not a sleeper.
+**Wire question:** did this packet mean what we classified? Horizon NDJSON, XiPackets, VieweD, `msg.lua`. `--assert-settled` lives here. Never edit kparser ParseCodes.
 
-On `record checkpoint:`, run `kparser2/scripts/opcode-heat.ps1` first. Exit 0 (`HEAT unchanged`) means skip reconcile and `--assert-settled`. Town position/entity spam and extra yells of an already-seen Kind are not a parity change. Do not infer chocobo digging from a town zone name; the server list is `diggingZoneList` in `server/scripts/globals/hobbies/chocobo_digging/logic.lua`.
+**Product question:** should this tab match kparser analytics (#4)? If both sides saw the same melee/kill/XP and numbers disagree, kparser tab meaning wins. Implement in kparser2. Score live `DetailedReports.format`, not unused report skeletons.
 
-A game DC, kpacket unload, or incoming `0x000B` with `LogoutState` LOGOUT/TIMEOUT/GMLOGOUT **ends that capture**. Zone change is the same opcode (`LogoutState=2`) — keep recording; do not treat every `0x000B` as logout. Do not append after a real stop. Reconcile with `kparser2/scripts/reconcile-capture.ps1` (drop truncated last lines). Trailing `0x28` magic start without finish is incomplete, not a miss. Then `wait-kpacket-session.ps1` and `record` a **new** file (`--idle-ms 180000`). Stop if the user ends the run.
+## Dual capture is a gate
 
-When a live pattern does not reconcile with kparser2 (unknown kind, garbage `commandArg`, start packet counted as damage, speaker/mode/body mismatch):
+A report-oracle scan records **both**:
 
-1. Ground truth is **HorizonXI bytes** (`record` NDJSON, VieweD, XiPackets).
-2. **kparser.cli snapshot** is a read-only second opinion. It can be wrong (chatlog codes ≠ `0x28 cmd_no`, missing prepare, no auto-translate). Never edit kparser to make a dump match. Never “fix” kparser so kparser2 looks better.
-3. Implement the **one** event in kparser2 (decoder, `ChatCommon`, `BattleMessageCatalog`, ingest). Promote a short live slice only after inspection. Open the PR against **`develop`**, not `main` (`main` is the release). Session branches use Conventional Branch names (`cursor/session-yyyymmdd-hhmm`, `feat/…`, `fix/…`); do not use a `parity/` prefix.
+1. Last-green `develop` `kparser2.cli record` (not session WIP) under `ffxi-captures/ndjson/`.
+2. `kparser.cli capture` (RAM ChatLines at `0x0062D8F0`) to a sibling chatlines file.
 
-On mismatch (including after a DC recon), look up the sibling repo for that opcode before patching: XiPackets `0x0017` / `0x0028`, VieweD on the capture, LandSandBoat `server/scripts/enum/msg.lua` for `0x28` `message`, `spell_list.sql` for spell ids. Do not give the user an in-game checklist.
+Do **not** mark v1 “unobserved” and proceed. Failed attach: build/elevate/retry; ask once for Administrator. Town idle with a live attach is OK. NDJSON combat/chat with a dead chatlines file is capture broken — fix it; do not classify as kparser-only.
 
-Dual-dump of constructed fixtures proves CLI agreement, not retail layout. Live wins over `generate-fixtures.ps1`. `--assert-settled` is packet-id classification, not “kparser fights/offense match this camp.” kparser.cli cannot attach; do not treat Motenten chatline fixtures as the live session.
+`kparser.cli snapshot` of a file is not attach. Dual-dump of constructed Motenten fixtures is not Horizon layout. RC / `--assert-settled` still does not require v1.
+
+## Ticks (no sleeper)
+
+The long-lived jobs are `record` and `capture`. Attach `notify_on_output` to `record checkpoint:` / `recording stopped:` (and capture checkpoint/stop). Do **not** arm `Start-Sleep` + `AGENT_LOOP_WAKE`. Cursor `/loop` in this repo means record/watch stdout, not a sleeper.
+
+On `record checkpoint:`, run `kparser2/scripts/opcode-heat.ps1` first. Exit 0 (`HEAT unchanged`) means skip reconcile and snapshot. Town position/entity spam and extra yells of an already-seen Kind are not a parity change. Do not infer chocobo digging from a town zone name; the server list is `diggingZoneList` in `server/scripts/globals/hobbies/chocobo_digging/logic.lua`.
+
+Heat change, first checkpoint, or stop: `reconcile-capture.ps1`, snapshot **both** sides, classify **before coding**: kparser2-missing ingest | kparser2-missing report | kparser-only (do not clone) | kparser2-extra (keep) | intentional fork (write down; default match kparser report meaning). Search open PRs. One family on `cursor/session-yyyymmdd-hhmm` from `develop`; draft PR into `develop`, never `main`.
+
+A game DC, kpacket unload, or incoming `0x000B` with `LogoutState` LOGOUT/TIMEOUT/GMLOGOUT **ends that pair**. Zone change is the same opcode (`LogoutState=2`) — keep both files. Then `wait-kpacket-session.ps1` and start a **new** NDJSON plus a **new** chatlines capture. Stop if the user ends the run.
+
+## Wire lookup
+
+Ground truth for classification is Horizon bytes. On mismatch look up XiPackets `0x0017` / `0x0028`, VieweD, `server/scripts/enum/msg.lua`, `spell_list.sql`. Do not give the user an in-game checklist. Do not reopen kparser2 #10–#13. Do not close #4/#6/#9 from a scan. Do not touch #6.

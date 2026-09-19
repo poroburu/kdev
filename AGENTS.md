@@ -1,7 +1,7 @@
 # Agent notes
 
-Follow [CONTRIBUTING.md](CONTRIBUTING.md).
-
+- Follow [CONTRIBUTING.md](CONTRIBUTING.md).
+- Report-oracle parity scan: [kparser2/docs/report-oracle.md](kparser2/docs/report-oracle.md) (dual capture is a gate; do not mark kparser v1 unobserved).
 - GitHub Issues on the owning child hold open work and decisions. Close the issue when decided.
 - Git holds facts. Do not spray a verdict across parent README and child docs.
 - Parent `kdev` mostly pins submodules. Edit the child that owns the fact, then bump the pin.
