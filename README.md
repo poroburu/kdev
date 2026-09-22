@@ -11,11 +11,12 @@ git clone https://github.com/poroburu/kdev.git
 cd kdev
 git submodule update --init
 git submodule update --init --recursive kpacket2
-# private captures (if you have access):
+# private pins (if you have access):
 git submodule update --init ffxi-captures
+git submodule update --init FFXILogs
 ```
 
-`git clone --recurse-submodules` also initializes nested modules under `server` (`navmeshes`, `ximeshes`), which are large, and will error on private `ffxi-captures` unless you have access. Prefer the commands above.
+`git clone --recurse-submodules` also initializes nested modules under `server` (`navmeshes`, `ximeshes`), which are large, and will error on private `ffxi-captures` and `FFXILogs` unless you have access. Prefer the commands above.
 
 ## Layout
 
@@ -29,6 +30,7 @@ git submodule update --init ffxi-captures
 | `VieweD/` | Capture viewer / field oracle (upstream) |
 | `server/` | LandSandBoat SQL/item/zone source (upstream) |
 | `ffxi-captures/` | Local reference captures (private pin; payloads untracked) |
+| `FFXILogs/` | Community parse site and WebView2 shell (private pin) |
 
 `kpacket2` pins its own `XiPackets` submodule. The root `XiPackets/` copy is the workspace reference pin.
 

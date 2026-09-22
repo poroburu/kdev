@@ -25,8 +25,9 @@ git submodule update --init
 git submodule status
 ```
 
-`ffxi-captures` uses `update = none`. Initialize it only when you have access:
+`ffxi-captures` and `FFXILogs` use `update = none`. Initialize them only when you have access:
 
 ```powershell
 git submodule update --init ffxi-captures
+git submodule update --init FFXILogs
 ```

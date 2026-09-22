@@ -23,3 +23,7 @@
 	path = ffxi-captures
 	url = https://github.com/poroburu/ffxi-captures.git
 	update = none
+[submodule "FFXILogs"]
+	path = FFXILogs
+	url = https://github.com/poroburu/FFXILogs.git
+	update = none
